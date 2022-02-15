@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic-Tac-Toe</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 50px;
+        color: #FDD023;
+        background-color:#461D7C;
+      }
+      td {
+        border: 6px solid #FDD023;
+        height: 200px;
+        width: 250px;
+        text-align: center;
+        background-color: #461D7C;
+      }
+      table {
+        border-spacing: 0px;
+        border-collapse: collapse;
+        border-style: hidden;
+        font-size: 40px;
+      }
+      
+    </style>
+  </head>
+ 
+  <body>
+    Shannon's Tic Tac Toe Challenge
+    <div id="gameboard"></div>
+    <script>
+      /******************
+        * Initialize Variables
+        ******************/
+  
+      // Initialize 2x2 board array and current player
+      let board = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""],
+      ];
+      let currentPlayer = "X";
+  
+      // Add game board HTML element to page
+      let renderedBoard = document.querySelector("#gameboard");
+      const table = document.createElement("table");
+      renderedBoard.appendChild(table);
+      renderedBoard.addEventListener("click", takeTurn);
+      renderBoard(board, table);
+  
+      // render board creates the HTML elements that make up the board
+      // and adds them to the page
+        function renderBoard(board, table) {
+        // reset the table contents
+        table.innerHTML = "";
+        // create the HTML elements that make up the board
+        // the outer loop creates the rows
+        // the inner loop creates the table data cells
+        for (let i = 0; i < board.length; i++) {
+          const row = document.createElement("tr");
+          row.classList.add("row" + i);
+          table.appendChild(row);
+          for (let j = 0; j < board[i].length; j++) {
+            const element = document.createElement("td");
+            element.classList.add("column" + j);
+            element.innerHTML = board[i][j];
+            row.appendChild(element);
+          }
+        }
+      }
+ 
+     /****************
+      * TAKING A TURN
+      *****************/
+      /* The takeTurn function does the following:
+       - updates the board array with the current player's move (using modifyBoard)
+       - checks if game is won
+         - if won, display gameOver
+       - check if game is a tie (full board)
+         - if a tie, display tie */
+      function takeTurn(event) {
+        const col = event.target.cellIndex;
+        const row = event.target.parentElement.rowIndex;
+        if (col === undefined || row === undefined)
+          console.error("Did not click inside of a cell");
+        else if (board[row][col] !== "") {
+          console.error("Cell is filled");
+        } else {
+          modifyBoard(row, col);
+        }
+        if (!!checkForWin()) {
+          displayGameOver();
+        } else if (!!checkForTie()) {
+          displayTie();
+        }
+      }
+ 
+     /******************
+      * Helper Functions
+      ******************/
+ 
+     function checkRows(board) {
+      for(let i = 0; i < board.length; i++){
+        let xs = 0;
+        let os = 0;
+        for (let j = 0; j < board[i].length; j++){
+          if(board[i][j] == "X"){
+            xs += 1;
+          }
+          
+          if(board[i][j] == "O"){
+            os += 1;
+          }
+        }
+        
+        if(xs === 3){
+          return "X";
+        }
+        
+        if(os === 3){
+          return "O";
+        }
+      }
+      return null;
+    }
+ 
+     function checkColumns(board) {
+        // YOUR CODE HERE
+        //Need variable to hold column arrays
+        
+        let col0 = board.map(board => board[0]); 
+        let col1 = board.map(board => board[1]); 
+        let col2 = board.map(board => board[2]);
+        
+        let newBoard = [col0, col1, col2];
+        
+        for(let i = 0; i < newBoard.length; i++) {
+          let xs = 0;
+          let os = 0;
+          for (let j = 0; j < newBoard.length; j++){
+            if(newBoard[i][j] === "X"){
+              xs += 1;
+            } 
+            if (newBoard[i][j] === "O"){
+              os += 1;
+            } 
+          }
+          if (xs === 3) {
+            return "X";
+          }
+          if (os === 3){
+            return "O";
+          }
+        }
+        return null;
+      }
+ 
+     function checkDiagonals(board) {
+        const diagonals = getDiagonals(board);
+
+        const diagOne = checkDiagAllMatching(diagonals[0]);
+        const diagTwo = checkDiagAllMatching(diagonals[1]);
+
+        return diagOne || diagTwo || null;
+
+        function reduceDiagonals(letter, currentLetter){
+          if (letter !== currentLetter) {
+            letter = null;
+          }
+          return letter;
+        }
+
+        function checkDiagAllMatching(diag){
+          return diag.reduce(reduceDiagonals, diag[0]);
+        }
+
+        function getDiagonals(board) {
+          return [
+          [board[0][0], board[1][1], board[2][2]],
+          [board[0][2], board[1][1], board[2][0]]
+          ];
+        }
+      }
+ 
+     function checkForWin() {
+        return checkColumns(board) || checkRows(board) || checkDiagonals(board);
+     }
+ 
+     function checkForTie() {
+        let result = 0;
+        board.forEach(function(row, index){
+          row.forEach(function(letter){
+            if (letter){
+              result++;
+            }
+          })
+        })
+        return result === 9
+     }
+ 
+     function modifyBoard(row, col) {
+       board[row][col] = currentPlayer;
+       renderBoard(board, table);
+       togglePlayer();
+     }
+ 
+     function displayGameOver() {
+        document.body.innerHTML = "Game Over Player " + currentPlayer + " Wins!";
+     }
+ 
+     function displayTie() {
+        document.body.innerHTML = "Game Over: Tie!";
+     }
+      
+    function togglePlayer() {
+  // YOUR CODE HERE
+      if(currentPlayer === "O"){
+      document.getElementById(play).innerHTML = "X";
+      } else {
+        document.getElementById(play).innerHTML = "O";
+      }
+    // END CODE HERE
+    }
+   </script>
+ </body>
+</html>
