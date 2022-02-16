@@ -219,9 +219,9 @@
     function togglePlayer() {
   // YOUR CODE HERE
       if(currentPlayer === "O"){
-      document.getElementById(play).innerHTML = "X";
+        currentPlayer = "X";
       } else {
-        document.getElementById(play).innerHTML = "O";
+        currentPlayer = "O";
       }
     // END CODE HERE
     }
