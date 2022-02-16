@@ -97,9 +97,7 @@
         }
         if (checkForWin()) {
           displayGameOver();
-        } /*else if (!!checkForTie()) {
-          displayTie();
-        }*/
+        } 
       }
  
      /******************
