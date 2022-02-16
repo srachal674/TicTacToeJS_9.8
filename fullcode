@@ -95,9 +95,13 @@
         } else {
           modifyBoard(row, col);
         }
+        if (checkForTie()){
+          displayTie();
+        } 
         if (checkForWin()) {
           displayGameOver();
         } 
+        togglePlayer();
       }
  
      /******************
@@ -223,7 +227,7 @@
      function modifyBoard(row, col) {
        board[row][col] = currentPlayer;
        renderBoard(board, table);
-       togglePlayer();
+       //togglePlayer();
      }
  
      function displayGameOver() {
@@ -236,10 +240,10 @@
       
     function togglePlayer() {
       // YOUR CODE HERE
-      if(currentPlayer === "X"){
-        currentPlayer = "O";
-      } else {
+      if(currentPlayer === "O"){
         currentPlayer = "X";
+      } else {
+        currentPlayer = "O";
       }
     // END CODE HERE
     }
