@@ -17,6 +17,7 @@
         height: 200px;
         width: 250px;
         text-align: center;
+        color: aqua;
         background-color: #461D7C;
       }
       table {
@@ -25,12 +26,14 @@
         border-style: hidden;
         font-size: 40px;
       }
-      
+      h2 {
+        color: #FDD023;
+      }
     </style>
   </head>
  
   <body>
-    Shannon's Tic Tac Toe Challenge
+    <h2>Shannon's Tic Tac Toe Challenge</h2>
     <div id="gameboard"></div>
     <script>
       /******************
@@ -85,50 +88,50 @@
       function takeTurn(event) {
         const col = event.target.cellIndex;
         const row = event.target.parentElement.rowIndex;
-        if (col === undefined || row === undefined)
+        if (col === undefined || row === undefined){
           console.error("Did not click inside of a cell");
-        else if (board[row][col] !== "") {
+        } else if (board[row][col] !== "") {
           console.error("Cell is filled");
         } else {
           modifyBoard(row, col);
         }
-        if (!!checkForWin()) {
+        if (checkForWin()) {
           displayGameOver();
-        } else if (!!checkForTie()) {
+        } /*else if (!!checkForTie()) {
           displayTie();
-        }
+        }*/
       }
  
      /******************
       * Helper Functions
       ******************/
  
-     function checkRows(board) {
-      for(let i = 0; i < board.length; i++){
-        let xs = 0;
-        let os = 0;
-        for (let j = 0; j < board[i].length; j++){
-          if(board[i][j] == "X"){
-            xs += 1;
+      function checkRows(board) {
+        for(let i = 0; i < board.length; i++){
+          let xs = 0;
+          let os = 0;
+          for (let j = 0; j < board[i].length; j++){
+            if(board[i][j] == "X"){
+              xs += 1;
+            }
+            
+            if(board[i][j] == "O"){
+              os += 1;
+            }
           }
           
-          if(board[i][j] == "O"){
-            os += 1;
+          if(xs === 3){
+            return "X";
+          }
+          
+          if(os === 3){
+            return "O";
           }
         }
-        
-        if(xs === 3){
-          return "X";
-        }
-        
-        if(os === 3){
-          return "O";
-        }
+        return null;
       }
-      return null;
-    }
  
-     function checkColumns(board) {
+      function checkColumns(board) {
         // YOUR CODE HERE
         //Need variable to hold column arrays
         
@@ -159,31 +162,48 @@
         return null;
       }
  
-     function checkDiagonals(board) {
-        const diagonals = getDiagonals(board);
+      function checkDiagonals(board) {
+        // YOUR CODE HERE
+        let diagonal0 = [];
+        let diagonal1 = [];
+        let boardThree = [diagonal0, diagonal1];
 
-        const diagOne = checkDiagAllMatching(diagonals[0]);
-        const diagTwo = checkDiagAllMatching(diagonals[1]);
-
-        return diagOne || diagTwo || null;
-
-        function reduceDiagonals(letter, currentLetter){
-          if (letter !== currentLetter) {
-            letter = null;
+        for(let i = 0; i < board.length; i++){
+          for(let j = 0; j < board.length; j++){
+            if(i === j){
+              diagonal0.push(board[i][j]);
+            }
           }
-          return letter;
         }
 
-        function checkDiagAllMatching(diag){
-          return diag.reduce(reduceDiagonals, diag[0]);
+        for(let i = 0; i < board.length; i++){
+          for(let j = 0; j < board.length; j++){
+            if (i + j === board.length - 1){
+              diagonal1.push(board[i][j]);
+            }
+          }
         }
-
-        function getDiagonals(board) {
-          return [
-          [board[0][0], board[1][1], board[2][2]],
-          [board[0][2], board[1][1], board[2][0]]
-          ];
+        
+        for(let i = 0; i < 2; i++){
+          let xS = 0;
+          let oS = 0;
+          for(let j = 0; j <board.length; j++){
+            let hit = boardThree[i][j];
+            if("X" === hit){
+              xS ++;
+            }else if ("O" === hit){
+              oS ++;
+            }
+          }
+          if(xS === board.length){
+            return "X";
+          }
+          if(oS === board.length){
+            return "O";
+          }
         }
+        return null;
+        // END CODE HERE
       }
  
      function checkForWin() {
@@ -199,7 +219,7 @@
             }
           })
         })
-        return result === 9
+        return result === 9;
      }
  
      function modifyBoard(row, col) {
@@ -217,11 +237,11 @@
      }
       
     function togglePlayer() {
-  // YOUR CODE HERE
-      if(currentPlayer === "O"){
-        currentPlayer = "X";
-      } else {
+      // YOUR CODE HERE
+      if(currentPlayer === "X"){
         currentPlayer = "O";
+      } else {
+        currentPlayer = "X";
       }
     // END CODE HERE
     }
